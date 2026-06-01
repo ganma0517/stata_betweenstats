@@ -42,6 +42,10 @@
 {synopt:{opt means}}add a mean dot and {&mu} label to each group{p_end}
 {synopt:{opt meancolor(string)}}mean-dot color; default dark red{p_end}
 
+{syntab:Faceting}
+{synopt:{opt panel(varname)}}draw one sub-plot per level of this variable and combine them{p_end}
+{synopt:{opt cols(#)}}number of columns when faceting (default: auto){p_end}
+
 {syntab:Appearance}
 {synopt:{opt palette(string)}}space-separated R G B triples, one color per group{p_end}
 {synopt:{opt title(string)}}graph title{p_end}
@@ -123,6 +127,10 @@ exports the graph and {opt name()} names the graph window.
 
 {pstd}Show all pairwise brackets (including non-significant){p_end}
 {phang2}{cmd:. betweenstats score, by(group) showns}{p_end}
+
+{pstd}Faceted: one sub-plot per level of a panel variable{p_end}
+{phang2}{cmd:. use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo3.dta", clear}{p_end}
+{phang2}{cmd:. betweenstats score, by(method) panel(subject)}{p_end}
 
 
 {marker author}{...}

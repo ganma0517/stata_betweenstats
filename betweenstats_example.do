@@ -28,6 +28,13 @@ use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/between
 betweenstats score, by(group) test(param)
 betweenstats score, by(group) type(violin) test(param) means
 
+* ============================================================
+* STYLE 3 — faceted by a panel variable
+* (one sub-plot per level of panel(); auto columns)
+* ============================================================
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo3.dta", clear
+betweenstats score, by(method) panel(subject)
+
 * 4) Show all pairwise brackets (including non-significant)
 betweenstats score, by(group) showns
 

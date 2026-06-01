@@ -25,17 +25,65 @@
 
 program define betweenstats
     version 16.0
-    syntax varname(numeric) , by(varname) ///
+    syntax varname(numeric) [if] [in] , by(varname) ///
         [ TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS NOPoints ///
           JITTER(real 0.18) MSize(string) PALette(string) ///
-          MEANs MEANColor(string) ///
+          MEANs MEANColor(string) PANel(varname) COLs(integer 0) ///
           title(string asis) YTITle(string asis) XTITle(string asis) ///
           saving(string) name(string) ]
 
-    marksample touse
-    markout `touse' `by'
     local y `varlist'
     local g `by'
+
+    * =====================================================
+    * PANEL MODE: draw one betweenstats per level of panel()
+    * and combine them into a single faceted graph.
+    * =====================================================
+    if "`panel'" != "" {
+        if "`name'"=="" local name "betweenstats"
+        tempvar ptouse
+        marksample ptouse, novarlist
+        markout `ptouse' `y' `g' `panel'
+        quietly levelsof `panel' if `ptouse', local(plevs)
+        local np : word count `plevs'
+        if `cols'==0 {
+            if `np'<=2 local cols = `np'
+            else if `np'<=4 local cols = 2
+            else local cols = 3
+        }
+        * collect passthrough options
+        local opts `"type(`type') test(`test') alpha(`alpha') `nopoints' jitter(`jitter') `means'"'
+        if "`msize'"!=""     local opts `"`opts' msize(`msize')"'
+        if "`palette'"!=""   local opts `"`opts' palette(`palette')"'
+        if "`meancolor'"!="" local opts `"`opts' meancolor(`meancolor')"'
+        if "`showns'"!=""    local opts `"`opts' showns"'
+        if `"`ytitle'"'!=""  local opts `"`opts' ytitle(`"`ytitle'"')"'
+        if `"`xtitle'"'!=""  local opts `"`opts' xtitle(`"`xtitle'"')"'
+
+        local subnames ""
+        local j = 0
+        foreach pl of local plevs {
+            local ++j
+            * panel value label for the subtitle
+            local plab : label (`panel') `pl'
+            if `"`plab'"'=="" local plab "`pl'"
+            local sub`j' "_bs_panel`j'"
+            betweenstats `y' if `panel'==`pl' & `ptouse', by(`g') `opts' ///
+                title("`plab'") name(`sub`j'')
+            local subnames `subnames' `sub`j''
+        }
+        graph combine `subnames', cols(`cols') ///
+            `=cond(`"`title'"'=="","",`"title(`"`title'"')"')' ///
+            graphregion(color(white)) name(`name', replace)
+        if `"`saving'"' != "" {
+            quietly graph export `"`saving'"', replace width(2600)
+            di as result "saved: `saving'"
+        }
+        exit
+    }
+
+    marksample touse
+    markout `touse' `by'
 
     if "`type'"=="" local type "box"
     if !inlist("`type'","box","violin") {

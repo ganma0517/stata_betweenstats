@@ -30,6 +30,18 @@ betweenstats sat, by(layout) type(violin) test(param) means
 
 ![style 2](example_violin_param.png)
 
+**Style 3 — faceted by a panel variable** (`panel()`)
+
+Draw one sub-plot per level of another variable and combine them — ideal for
+comparing the same grouping across markers, subjects, time points, etc.
+
+```stata
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo3.dta", clear
+betweenstats score, by(method) panel(subject)
+```
+
+![style 3](example_panel.png)
+
 ## Requirements
 
 - Stata 16 or newer
@@ -83,6 +95,8 @@ betweenstats yvar [if] [in], by(groupvar) [options]
 | `showns` | also show non-significant brackets | off |
 | `means` | add mean dot + μ label | off |
 | `meancolor()` | mean-dot color | dark red |
+| `panel(varname)` | facet: one sub-plot per level | — |
+| `cols(#)` | columns when faceting | auto |
 | `nopoints` `jitter()` `msize()` | raw-point controls | — |
 | `palette()` | R G B triples, one per group | built-in |
 | `title()` `ytitle()` `xtitle()` | titles | variable labels |
