@@ -9,13 +9,23 @@ set more off
 * load practice data from the repo (no install needed)
 use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo.dta", clear
 
-* 1) Default: box + Kruskal-Wallis/Dunn
-betweenstats score, by(group)
+* ============================================================
+* STYLE 1 — box + Kruskal-Wallis / Dunn (nonparametric)
+* ============================================================
+betweenstats score, by(group) type(box) test(np)
 
-* 2) Box + Welch ANOVA/Games-Howell
+* ============================================================
+* STYLE 2 — violin + Welch / Games-Howell + means (parametric)
+* (load the 4-group satisfaction demo for this one)
+* ============================================================
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo2.dta", clear
+betweenstats sat, by(layout) type(violin) test(param) means
+
+* reload the first demo for the remaining examples
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo.dta", clear
+
+* other combinations
 betweenstats score, by(group) test(param)
-
-* 3) Violin + means (mean dot + mu label)
 betweenstats score, by(group) type(violin) test(param) means
 
 * 4) Show all pairwise brackets (including non-significant)

@@ -5,12 +5,30 @@ R's `ggstatsplot::ggbetweenstats`: a **box or violin** for each group with
 jittered raw data points, an **overall test** in the header, and
 **pairwise-comparison brackets** (Holm-adjusted) at the top.
 
-![example](example_betweenstats.png)
-
 Two test families are built in — no external packages required:
 
 - **np** — Kruskal-Wallis omnibus + Dunn pairwise (rank-based; default)
 - **param** — Welch ANOVA omnibus + Games-Howell pairwise (unequal variances)
+
+## Two ready-made styles
+
+**Style 1 — box + Kruskal-Wallis / Dunn** (nonparametric)
+
+```stata
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo.dta", clear
+betweenstats score, by(group) type(box) test(np)
+```
+
+![style 1](example_box_np.png)
+
+**Style 2 — violin + Welch / Games-Howell + means** (parametric)
+
+```stata
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo2.dta", clear
+betweenstats sat, by(layout) type(violin) test(param) means
+```
+
+![style 2](example_violin_param.png)
 
 ## Requirements
 
