@@ -35,6 +35,9 @@ betweenstats score, by(group) type(violin) test(param) means
 use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo3.dta", clear
 betweenstats score, by(method) panel(subject)
 
+* shared y-axis across panels
+betweenstats score, by(method) panel(subject) ycommon
+
 * 4) Show all pairwise brackets (including non-significant)
 betweenstats score, by(group) showns
 

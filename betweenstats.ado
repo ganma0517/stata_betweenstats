@@ -28,7 +28,8 @@ program define betweenstats
     syntax varname(numeric) [if] [in] , by(varname) ///
         [ TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS NOPoints ///
           JITTER(real 0.18) MSize(string) PALette(string) ///
-          MEANs MEANColor(string) PANel(varname) COLs(integer 0) ///
+          MEANs MEANColor(string) PANel(varname) COLs(integer 0) YCOMMON ///
+          YForce(numlist min=2 max=2) ///
           title(string asis) YTITle(string asis) XTITle(string asis) ///
           saving(string) name(string) ]
 
@@ -60,6 +61,14 @@ program define betweenstats
         if `"`ytitle'"'!=""  local opts `"`opts' ytitle(`"`ytitle'"')"'
         if `"`xtitle'"'!=""  local opts `"`opts' xtitle(`"`xtitle'"')"'
 
+        * ycommon: find the global y-range across all panels and force it on each
+        if "`ycommon'"!="" {
+            quietly summarize `y' if `ptouse', meanonly
+            local gymin = r(min)
+            local gymax = r(max)
+            local opts `"`opts' yforce(`gymin' `gymax')"'
+        }
+
         local subnames ""
         local j = 0
         foreach pl of local plevs {
@@ -73,6 +82,7 @@ program define betweenstats
             local subnames `subnames' `sub`j''
         }
         graph combine `subnames', cols(`cols') ///
+            `=cond("`ycommon'"=="","","ycommon")' ///
             `=cond(`"`title'"'=="","",`"title(`"`title'"')"')' ///
             graphregion(color(white)) name(`name', replace)
         if `"`saving'"' != "" {
@@ -173,6 +183,13 @@ program define betweenstats
     quietly summarize `y', meanonly
     local ymin = r(min)
     local ymax = r(max)
+    * common-scale override: use the global range for the axis floor/ceiling
+    if "`yforce'"!="" {
+        local gy1 : word 1 of `yforce'
+        local gy2 : word 2 of `yforce'
+        local ymin = `gy1'
+        local ymax = `gy2'
+    }
     local yr = `ymax' - `ymin'
 
     * =====================================================

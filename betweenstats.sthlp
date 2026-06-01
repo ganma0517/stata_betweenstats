@@ -45,6 +45,7 @@
 {syntab:Faceting}
 {synopt:{opt panel(varname)}}draw one sub-plot per level of this variable and combine them{p_end}
 {synopt:{opt cols(#)}}number of columns when faceting (default: auto){p_end}
+{synopt:{opt ycommon}}use a shared (common) y-axis across all panels{p_end}
 
 {syntab:Appearance}
 {synopt:{opt palette(string)}}space-separated R G B triples, one color per group{p_end}

@@ -38,6 +38,9 @@ comparing the same grouping across markers, subjects, time points, etc.
 ```stata
 use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo3.dta", clear
 betweenstats score, by(method) panel(subject)
+
+* add ycommon for a shared y-axis across panels (easier to compare)
+betweenstats score, by(method) panel(subject) ycommon
 ```
 
 ![style 3](example_panel.png)
@@ -97,6 +100,7 @@ betweenstats yvar [if] [in], by(groupvar) [options]
 | `meancolor()` | mean-dot color | dark red |
 | `panel(varname)` | facet: one sub-plot per level | — |
 | `cols(#)` | columns when faceting | auto |
+| `ycommon` | shared y-axis across panels | off |
 | `nopoints` `jitter()` `msize()` | raw-point controls | — |
 | `palette()` | R G B triples, one per group | built-in |
 | `title()` `ytitle()` `xtitle()` | titles | variable labels |
