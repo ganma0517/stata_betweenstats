@@ -375,8 +375,8 @@ program define betweenstats
 
     * ---- significance brackets ----
     * start well above the data and use a generous gap between rows
-    local top = `ymax' + 0.12*`yr'
-    local step = 0.13*`yr'
+    local top = `ymax' + 0.13*`yr'
+    local step = 0.15*`yr'
     local tick = 0.022*`yr'
     local row = 0
     forvalues p = 1/`npairs' {
@@ -411,10 +411,10 @@ program define betweenstats
                 local pstr = trim("`ms'") + "e" + string(`expo')
             }
             local xm = (`xa'+`xb')/2
-            local txt `txt' text(`=`H'+0.5*`tick'' `xm' "p = `pstr'", size(vsmall) placement(c) color(gs4))
+            local txt `txt' text(`=`H'+1.9*`tick'' `xm' "p = `pstr'", size(vsmall) placement(c) color(gs4))
         }
     }
-    local ytop = `top' + (`row')*`step' + 0.06*`yr'
+    local ytop = `top' + (`row')*`step' + 0.08*`yr'
 
     quietly summarize `xj', meanonly
     local xmin = 0.5
