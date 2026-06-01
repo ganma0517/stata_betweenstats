@@ -1,10 +1,11 @@
-*! betweenstats v0.9  1Jun2026
+*! betweenstats v1.1  2Jun2026
 *! Between-groups comparison plot (ggstatsplot-style):
 *! box or violin + jittered points, an overall test in the header, and
 *! pairwise-comparison brackets (significant pairs) at the top.
+*! Supports faceting by a panel variable, optionally on a shared y-axis.
 *!
 *! Syntax:
-*!   betweenstats yvar , by(groupvar) [ options ]
+*!   betweenstats yvar [if] [in] , by(groupvar) [ options ]
 *!
 *! Options:
 *!   by(varname)        grouping variable (required)
@@ -16,7 +17,12 @@
 *!   nopoints           do not draw the jittered points
 *!   jitter(#)          half-width of point jitter (default .18)
 *!   msize(string)      point size (default small)
-*!   palette(string)    space-separated colors, one per group
+*!   means              add a mean dot and mu = value label to each group
+*!   meancolor(string)  mean-dot color (default dark red)
+*!   palette(string)    space-separated R G B triples, one per group
+*!   panel(varname)     facet: draw one sub-plot per level and combine them
+*!   cols(#)            number of columns when faceting (default: auto)
+*!   ycommon            shared (common) y-axis across all panels
 *!   title(string)      graph title
 *!   ytitle(string)     y title (default = yvar label)
 *!   xtitle(string)     x title (default = groupvar label)
