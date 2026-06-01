@@ -1,0 +1,4 @@
+v 3
+d Stata packages by Wen-Cheng Lin
+d https://github.com/ganma0517/stata_betweenstats
+p betweenstats  Between-groups comparison plot with overall test and pairwise brackets

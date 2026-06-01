@@ -1,0 +1,17 @@
+v 3
+d betweenstats: Between-groups comparison plot with overall test and pairwise brackets
+d
+d ggstatsplot-style box/violin + jittered points, an omnibus test in the header,
+d and Holm-adjusted pairwise-comparison brackets. Built-in Kruskal-Wallis+Dunn
+d and Welch ANOVA+Games-Howell (no external packages needed).
+d
+d Requires: Stata 16 or newer.
+d
+d Author: Wen-Cheng Lin, Academia Sinica
+d Source: https://github.com/ganma0517/stata_betweenstats
+d
+d Distribution-Date: 20260601
+d
+f betweenstats.ado
+f betweenstats.sthlp
+f betweenstats_demo.dta
