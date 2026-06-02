@@ -98,6 +98,7 @@ betweenstats yvar [if] [in], by(groupvar) [options]
 | `showns` | also show non-significant brackets | off |
 | `means` | add mean dot + μ label | off |
 | `meancolor()` | mean-dot color | dark red |
+| `boxfill` | fill each box with its group colour | off |
 | `panel(varname)` | facet: one sub-plot per level | — |
 | `cols(#)` | columns when faceting | auto |
 | `ycommon` | shared y-axis across panels | off |

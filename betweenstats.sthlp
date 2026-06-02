@@ -41,6 +41,7 @@
 {synopt:{opt msize(string)}}point marker size; default {cmd:small}{p_end}
 {synopt:{opt means}}add a mean dot and {&mu} label to each group{p_end}
 {synopt:{opt meancolor(string)}}mean-dot color; default dark red{p_end}
+{synopt:{opt boxfill}}fill each box with its group colour (box type){p_end}
 
 {syntab:Faceting}
 {synopt:{opt panel(varname)}}draw one sub-plot per level of this variable and combine them{p_end}
