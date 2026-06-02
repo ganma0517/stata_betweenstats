@@ -35,6 +35,7 @@ program define betweenstats
         [ TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS NOPoints ///
           JITTER(real 0.18) MSize(string) PALette(string) ///
           MEANs MEANColor(string) PANel(varname) COLs(integer 0) YCOMMON ///
+          BOXFill ///
           YForce(numlist min=2 max=2) ///
           title(string asis) YTITle(string asis) XTITle(string asis) ///
           saving(string) name(string) ]
@@ -59,7 +60,7 @@ program define betweenstats
             else local cols = 3
         }
         * collect passthrough options
-        local opts `"type(`type') test(`test') alpha(`alpha') `nopoints' jitter(`jitter') `means'"'
+        local opts `"type(`type') test(`test') alpha(`alpha') `nopoints' jitter(`jitter') `means' `boxfill'"'
         if "`msize'"!=""     local opts `"`opts' msize(`msize')"'
         if "`palette'"!=""   local opts `"`opts' palette(`palette')"'
         if "`meancolor'"!="" local opts `"`opts' meancolor(`meancolor')"'
@@ -425,6 +426,19 @@ program define betweenstats
         if "`type'"=="box" {
             local plot `"`plot' (pci `wlo`gl'' `xc' `q1`gl'' `xc', lcolor(black) lwidth(thin)) "'
             local plot `"`plot' (pci `q3`gl'' `xc' `whi`gl'' `xc', lcolor(black) lwidth(thin)) "'
+        }
+        * optional: fill the box with the group colour (stacked strips)
+        if "`boxfill'"!="" & "`type'"=="box" {
+            local r1 : word `=(`ci2'-1)*3+1' of `palette'
+            local g1 : word `=(`ci2'-1)*3+2' of `palette'
+            local b1 : word `=(`ci2'-1)*3+3' of `palette'
+            local fcol "`r1' `g1' `b1'"
+            local nstrip = 40
+            local hgt = `q3`gl'' - `q1`gl''
+            forvalues s = 0/`nstrip' {
+                local yy = `q1`gl'' + `hgt'*`s'/`nstrip'
+                local plot `"`plot' (pci `yy' `bxl' `yy' `bxr', lcolor("`fcol'%70") lwidth(vthin)) "'
+            }
         }
         local plot `"`plot' (pci `q1`gl'' `bxl' `q3`gl'' `bxl', lcolor(black) lwidth(medthin)) "'
         local plot `"`plot' (pci `q1`gl'' `bxr' `q3`gl'' `bxr', lcolor(black) lwidth(medthin)) "'
