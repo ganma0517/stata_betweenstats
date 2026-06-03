@@ -38,6 +38,9 @@ betweenstats score, by(method) panel(subject)
 * shared y-axis across panels
 betweenstats score, by(method) panel(subject) ycommon
 
+* reload the first demo (has the `group` variable) for the remaining examples
+use "https://raw.githubusercontent.com/ganma0517/stata_betweenstats/main/betweenstats_demo.dta", clear
+
 * 4) Show all pairwise brackets (including non-significant)
 betweenstats score, by(group) showns
 
@@ -46,5 +49,12 @@ betweenstats score, by(group) type(violin) test(param) means ///
     title("Reaction time by training program") ///
     ytitle("Reaction time (ms)") xtitle("Program") ///
     saving("betweenstats_demo.png")
+
+* 6) Assign an explicit colour to each group with value=colour pairs.
+*    The key is the group's value label OR its raw value; groups not listed
+*    keep their default palette colour. Use the raw value when the label
+*    contains spaces (here the labels are "Program A/B/C", so use 1/2/3).
+betweenstats score, by(group) type(box) boxfill ///
+    colors(1=blue 2=green 3=gs8)
 
 display as result "betweenstats tutorial finished — see help betweenstats."

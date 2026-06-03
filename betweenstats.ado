@@ -20,6 +20,8 @@
 *!   means              add a mean dot and mu = value label to each group
 *!   meancolor(string)  mean-dot color (default dark red)
 *!   palette(string)    space-separated R G B triples, one per group
+*!   colors(string)     explicit colour per group as value=colour pairs, e.g.
+*!                      colors(KMT=blue DPP=green TPP=gs8 中立無反應=black)
 *!   panel(varname)     facet: draw one sub-plot per level and combine them
 *!   cols(#)            number of columns when faceting (default: auto)
 *!   ycommon            shared (common) y-axis across all panels
@@ -33,7 +35,7 @@ program define betweenstats
     version 16.0
     syntax varname(numeric) [if] [in] , by(varname) ///
         [ TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS NOPoints ///
-          JITTER(real 0.18) MSize(string) PALette(string) ///
+          JITTER(real 0.18) MSize(string) PALette(string) COLORS(string asis) ///
           MEANs MEANColor(string) PANel(varname) COLs(integer 0) YCOMMON ///
           BOXFill ///
           YForce(numlist min=2 max=2) ///
@@ -63,6 +65,7 @@ program define betweenstats
         local opts `"type(`type') test(`test') alpha(`alpha') `nopoints' jitter(`jitter') `means' `boxfill'"'
         if "`msize'"!=""     local opts `"`opts' msize(`msize')"'
         if "`palette'"!=""   local opts `"`opts' palette(`palette')"'
+        if `"`colors'"'!=""  local opts `"`opts' colors(`colors')"'
         if "`meancolor'"!="" local opts `"`opts' meancolor(`meancolor')"'
         if "`showns'"!=""    local opts `"`opts' showns"'
         if `"`ytitle'"'!=""  local opts `"`opts' ytitle(`"`ytitle'"')"'
@@ -171,6 +174,23 @@ program define betweenstats
         }
         local lab`gl' `"`lb'"'
         local xlab `xlab' `i' `"`lb'"'
+        * resolve this group's colour: default = palette RGB triple for this
+        * position; an explicit colors("group=colour") mapping overrides it
+        * (key may be the group's value label or its raw value).
+        local r1 : word `=(`i'-1)*3+1' of `palette'
+        local g1 : word `=(`i'-1)*3+2' of `palette'
+        local b1 : word `=(`i'-1)*3+3' of `palette'
+        local gcol`gl' "`r1' `g1' `b1'"
+        if `"`colors'"'!="" {
+            foreach kv of local colors {
+                local eq = strpos(`"`kv'"',"=")
+                if `eq' {
+                    local kk = substr(`"`kv'"',1,`eq'-1)
+                    local cc = substr(`"`kv'"',`eq'+1,.)
+                    if `"`kk'"'==`"`lb'"' | `"`kk'"'=="`gval'" local gcol`gl' `"`cc'"'
+                }
+            }
+        }
         * stats
         quietly summarize `y' if `gid'==`gl', detail
         local n`gl'  = r(N)
@@ -363,12 +383,7 @@ program define betweenstats
     if "`nopoints'"=="" {
         foreach gl of local glevs {
             local ++ci
-            local col : word `ci' of `palette'
-            * palette stored as triples; rebuild "r g b"
-            local r1 : word `=(`ci'-1)*3+1' of `palette'
-            local g1 : word `=(`ci'-1)*3+2' of `palette'
-            local b1 : word `=(`ci'-1)*3+3' of `palette'
-            local col "`r1' `g1' `b1'"
+            local col "`gcol`gl''"
             local plot `"`plot' (scatter `y' `xj' if `gid'==`gl', mcolor("`col'%55") msize(`msize') msymbol(O)) "'
         }
     }
@@ -384,10 +399,7 @@ program define betweenstats
 
         if "`type'"=="violin" {
             * group color
-            local r1 : word `=(`ci2'-1)*3+1' of `palette'
-            local g1 : word `=(`ci2'-1)*3+2' of `palette'
-            local b1 : word `=(`ci2'-1)*3+3' of `palette'
-            local vcol "`r1' `g1' `b1'"
+            local vcol "`gcol`gl''"
             * kernel density at 48 evaluation points
             tempvar kx kd
             quietly kdensity `y' if `gid'==`gl', nograph generate(`kx' `kd') n(48)
@@ -429,10 +441,7 @@ program define betweenstats
         }
         * optional: fill the box with the group colour (stacked strips)
         if "`boxfill'"!="" & "`type'"=="box" {
-            local r1 : word `=(`ci2'-1)*3+1' of `palette'
-            local g1 : word `=(`ci2'-1)*3+2' of `palette'
-            local b1 : word `=(`ci2'-1)*3+3' of `palette'
-            local fcol "`r1' `g1' `b1'"
+            local fcol "`gcol`gl''"
             local nstrip = 40
             local hgt = `q3`gl'' - `q1`gl''
             forvalues s = 0/`nstrip' {

@@ -45,6 +45,20 @@ betweenstats score, by(method) panel(subject) ycommon
 
 ![style 3](example_panel.png)
 
+## Colour each group — `colors()`
+
+Assign specific groups their own colour with `value=colour` pairs. The key is the
+group's value label, or its raw value (use the raw value when the label contains
+spaces). Groups you don't list keep their default palette colour. Works with box,
+violin, and `boxfill`.
+
+```stata
+betweenstats score, by(party) type(box) boxfill ///
+    colors(KMT=blue DPP=green TPP=gs8 中立無反應=black)
+```
+
+![colours by group](example_colors.png)
+
 ## Requirements
 
 - Stata 16 or newer
@@ -104,6 +118,7 @@ betweenstats yvar [if] [in], by(groupvar) [options]
 | `ycommon` | shared y-axis across panels | off |
 | `nopoints` `jitter()` `msize()` | raw-point controls | — |
 | `palette()` | R G B triples, one per group | built-in |
+| `colors()` | explicit colour per group, e.g. `colors(KMT=blue DPP=green TPP=gs8)` | — |
 | `title()` `ytitle()` `xtitle()` | titles | variable labels |
 | `saving()` `name()` | export / window name | — |
 
