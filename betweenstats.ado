@@ -1,4 +1,4 @@
-*! betweenstats v1.1  2Jun2026
+*! betweenstats v1.2  8Jun2026
 *! Between-groups comparison plot (ggstatsplot-style):
 *! box or violin + jittered points, an overall test in the header, and
 *! pairwise-comparison brackets (significant pairs) at the top.
@@ -7,24 +7,35 @@
 *! Syntax:
 *!   betweenstats yvar [if] [in] , by(groupvar) [ options ]
 *!
-*! Options:
-*!   by(varname)        grouping variable (required)
+*! ---- required ----
+*!   by(varname)        grouping variable
+*!
+*! ---- plot type & test ----
 *!   type(string)       "box" (default) or "violin"
 *!   test(string)       "np" (Kruskal-Wallis + Dunn, default) or
 *!                      "param" (Welch ANOVA + Games-Howell)
 *!   alpha(#)           significance level for showing brackets (default .05)
 *!   showns             also draw brackets for non-significant pairs
+*!
+*! ---- points & means ----
 *!   nopoints           do not draw the jittered points
 *!   jitter(#)          half-width of point jitter (default .18)
 *!   msize(string)      point size (default small)
 *!   means              add a mean dot and mu = value label to each group
-*!   meancolor(string)  mean-dot color (default dark red)
+*!   meancolor(string)  mean-dot colour (default dark red)
+*!
+*! ---- colours ----
 *!   palette(string)    space-separated R G B triples, one per group
-*!   colors(string)     explicit colour per group as value=colour pairs, e.g.
-*!                      colors(KMT=blue DPP=green TPP=gs8 中立無反應=black)
-*!   panel(varname)     facet: draw one sub-plot per level and combine them
+*!   bycolors(string)   explicit colour per group, as value=colour pairs, e.g.
+*!                      bycolors(North=navy South=forest_green West=gs7)
+*!                      (colors() is kept as a backward-compatible alias)
+*!
+*! ---- faceting (small multiples) ----
+*!   panel(varname)     draw one sub-plot per level and combine them
 *!   cols(#)            number of columns when faceting (default: auto)
 *!   ycommon            shared (common) y-axis across all panels
+*!
+*! ---- titles & output ----
 *!   title(string)      graph title
 *!   ytitle(string)     y title (default = yvar label)
 *!   xtitle(string)     x title (default = groupvar label)
@@ -33,17 +44,24 @@
 
 program define betweenstats
     version 16.0
-    syntax varname(numeric) [if] [in] , by(varname) ///
-        [ TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS NOPoints ///
-          JITTER(real 0.18) MSize(string) PALette(string) COLORS(string asis) ///
-          MEANs MEANColor(string) PANel(varname) COLs(integer 0) YCOMMON ///
-          BOXFill ///
-          YForce(numlist min=2 max=2) ///
-          title(string asis) YTITle(string asis) XTITle(string asis) ///
+    syntax varname(numeric) [if] [in] , by(varname)                      ///
+        [                                                                ///
+          TYPE(string) TEST(string) Alpha(real 0.05) SHOWNS             /// type & test
+          NOPoints JITTER(real 0.18) MSize(string)                      /// points
+          MEANs MEANColor(string)                                       /// means
+          PALette(string) BYColors(string asis) COLORS(string asis)     /// colours
+          BOXFill                                                       ///
+          PANel(varname) COLs(integer 0) YCOMMON                        /// faceting
+          YForce(numlist min=2 max=2)                                   ///
+          title(string asis) YTITle(string asis) XTITle(string asis)    /// titles
           saving(string) name(string) ]
 
     local y `varlist'
     local g `by'
+
+    * bycolors() is the documented name; colors() kept as backward-compatible alias
+    if `"`bycolors'"'=="" local bycolors `"`colors'"'
+    local colors `"`bycolors'"'
 
     * =====================================================
     * PANEL MODE: draw one betweenstats per level of panel()

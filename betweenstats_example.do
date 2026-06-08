@@ -55,6 +55,6 @@ betweenstats score, by(group) type(violin) test(param) means ///
 *    keep their default palette colour. Use the raw value when the label
 *    contains spaces (here the labels are "Program A/B/C", so use 1/2/3).
 betweenstats score, by(group) type(box) boxfill ///
-    colors(1=blue 2=green 3=gs8)
+    bycolors(1=blue 2=green 3=gs8)
 
 display as result "betweenstats tutorial finished — see help betweenstats."

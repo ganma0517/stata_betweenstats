@@ -50,7 +50,7 @@
 
 {syntab:Appearance}
 {synopt:{opt palette(string)}}space-separated R G B triples, one color per group{p_end}
-{synopt:{opt colors(string)}}explicit colour per group as {it:value=colour} pairs, e.g. {cmd:colors(KMT=blue DPP=green TPP=gs8)}{p_end}
+{synopt:{opt byc:olors(string)}}explicit colour per group as {it:value=colour} pairs, e.g. {cmd:bycolors(1=navy 2=forest_green)} ({opt colors()} alias){p_end}
 {synopt:{opt title(string)}}graph title{p_end}
 {synopt:{opt ytitle(string)}}y-axis title; default = {it:yvar} label{p_end}
 {synopt:{opt xtitle(string)}}x-axis title; default = {it:groupvar} label{p_end}
@@ -109,9 +109,9 @@ group; {opt meancolor(string)} sets its color.
 {phang}{opt palette(string)} is a list of R G B triples (one per group), e.g.
 {cmd:palette("37 165 137  230 126 60  106 90 205")}.
 
-{phang}{opt colors(string)} assigns an explicit colour to specific groups as
+{phang}{opt bycolors(string)} assigns an explicit colour to specific groups as ({opt colors()} still works) 
 {it:value=colour} pairs, e.g.
-{cmd:colors(KMT=blue DPP=green TPP=gs8 中立無反應=black)}. The key may be the
+{cmd:bycolors(1=navy 2=forest_green 3=orange)}. The key may be the
 group's value label or its raw value (use the raw value when the label contains
 spaces); groups not listed keep their {opt palette()} colour. Use named colours
 (e.g. {cmd:blue}, {cmd:gs8}).
